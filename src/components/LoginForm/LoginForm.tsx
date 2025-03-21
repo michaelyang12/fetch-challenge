@@ -6,11 +6,7 @@ import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 import AuthContext from "../../contexts/AuthContext";
 
-interface LoginFormProps {
-  // handleAuthorization: (value: boolean) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({}) => {
+const LoginForm: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
@@ -31,6 +27,9 @@ const LoginForm: React.FC<LoginFormProps> = ({}) => {
       })
       .catch((error) => {
         console.error(error);
+        if (error.status === 401) {
+          handleAuthorization(false);
+        }
       });
   }, [name, email]);
 

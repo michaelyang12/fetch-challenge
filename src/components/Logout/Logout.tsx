@@ -12,12 +12,11 @@ const Logout: React.FC = () => {
     axios
       .post(url, requestConfig)
       .then((response) => {
-        console.log(response);
+        console.log("logout", response);
         handleAuthorization(false);
       })
       .catch((error) => {
         console.error("error logging out", error);
-        // handleAuthorization(false);
       });
   };
   return <Button onClick={handleLogout}>Logout</Button>;

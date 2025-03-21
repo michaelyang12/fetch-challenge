@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-interface HomeProps {}
-
-const Home: React.FC<HomeProps> = ({}) => {
+const Home: React.FC = () => {
   return <>HOMEPAGE</>;
 };
 
