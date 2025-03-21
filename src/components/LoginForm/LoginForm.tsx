@@ -1,17 +1,20 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
-import { api } from "../../constants";
+import { api, requestConfig } from "../../constants";
 import styles from "./LoginForm.module.scss";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
+import AuthContext from "../../contexts/AuthContext";
 
 interface LoginFormProps {
-  handleAuthorization: (value: boolean) => void;
+  // handleAuthorization: (value: boolean) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ handleAuthorization }) => {
+const LoginForm: React.FC<LoginFormProps> = ({}) => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+
+  const { handleAuthorization } = useContext(AuthContext);
 
   const submitCredentials = useCallback(() => {
     const url = `${api}auth/login`;
@@ -19,7 +22,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleAuthorization }) => {
       name: name,
       email: email,
     };
-    const requestConfig = { withCredentials: true };
+
     axios
       .post(url, data, requestConfig)
       .then((response) => {
