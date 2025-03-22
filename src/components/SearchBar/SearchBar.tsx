@@ -1,7 +1,8 @@
 import Filter, { FilterProps } from "./Filter/Filter";
+import Paginator, { PaginatorProps } from "./Paginator/Paginator";
 import styles from "./SearchBar.module.scss";
 
-interface SearchBarProps extends FilterProps {
+interface SearchBarProps extends FilterProps, PaginatorProps {
   handleSetDogIds: (value: number[]) => void;
 }
 
@@ -10,13 +11,26 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleSetDogIds,
   filterAscending,
   handleSetFilter,
+  totalDogCount,
+  currentPage,
+  handleSetCurrentPage,
 }) => {
   return (
     <div className={styles.container}>
-      <Filter
-        filterAscending={filterAscending}
-        handleSetFilter={handleSetFilter}
-      />
+      <div className={styles.filterContainer}>
+        <Filter
+          filterAscending={filterAscending}
+          handleSetFilter={handleSetFilter}
+        />
+      </div>
+      <div className={styles.searchContainer}></div>
+      <div className={styles.pageContainer}>
+        <Paginator
+          totalDogCount={totalDogCount}
+          currentPage={currentPage}
+          handleSetCurrentPage={handleSetCurrentPage}
+        />
+      </div>
     </div>
   );
 };

@@ -7,19 +7,24 @@ interface DogBoxProps {
 }
 const DogBox: React.FC<DogBoxProps> = ({ dogData }) => {
   return (
-    <div className={styles.galleryItem}>
+    <div className={styles.galleryItem} key={dogData.id}>
       <div className={styles.image}>
         <img
-          // width={250}
+          height={250}
           key={dogData.id}
           src={dogData.img}
           alt={dogData.name || "Dog"}
         />
       </div>
       <div className={styles.info}>
-        <div className={styles.name}>Name: {dogData.name}</div>
-        <div className={styles.age}>Age: {dogData.age}</div>
-        <div className={styles.breed}>Breed: {dogData.breed}</div>
+        <div className={styles.name}>
+          <b>{dogData.name}</b>
+        </div>
+        <div className={styles.breed}>
+          {dogData.breed}
+          <span className={styles.age}> - {dogData.age} years</span>
+        </div>
+        {/* <div className={styles.breed}>Breed: {dogData.breed}</div> */}
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Dog } from "../models";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { api, requestConfig } from "../constants";
+import { api, perPageResults, requestConfig } from "../constants";
 import styles from "./Home.module.scss";
 import { JSX } from "react/jsx-dev-runtime";
 import DogBox from "../components/DogBox/DogBox";
 import SearchBar from "../components/SearchBar/SearchBar";
+import AuthContext from "../contexts/AuthContext";
 
 ///TODO: Add filter by breed
 ///TODO: Sort alphabetically by breed
@@ -16,14 +17,24 @@ import SearchBar from "../components/SearchBar/SearchBar";
 //TODO: Add favorites
 export type FilterOptions = "breed" | "age" | "name";
 const Home: React.FC = () => {
+  const { handleSetAuthorization } = useContext(AuthContext);
   const [dogIds, setDogIds] = useState<number[]>([]);
   const [dogData, setDogData] = useState<Dog[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [favorites, setFavorites] = useState<Dog[]>([]); //Store either dog object or dog id
   const [filterAscending, setFilterAscending] = useState<boolean>(true);
   const [filterOption, setFilterOption] = useState<FilterOptions>("breed");
   const [loading, setLoading] = useState<boolean>(false);
   const [breeds, setBreeds] = useState<string[]>([]);
+  const [totalDogCount, setTotalDogCount] = useState<number>(0);
+
+  const handleSetCurrentPage = (value: number) => {
+    if (value > 0 && value <= totalDogCount / perPageResults) {
+      setCurrentPage(value);
+    } else {
+      console.warn("Page number must be a positive value");
+    }
+  };
 
   const handleSetFilter = (value: boolean, option: FilterOptions) => {
     console.log(`Filtering by ${option}:`, filterAscending, option);
@@ -59,6 +70,7 @@ const Home: React.FC = () => {
     const params = {
       params: {
         sort: filterAscending ? `${filterOption}:asc` : `${filterOption}:desc`,
+        from: (currentPage - 1) * perPageResults,
       },
       withCredentials: true,
     };
@@ -69,9 +81,13 @@ const Home: React.FC = () => {
       .then((response: AxiosResponse) => {
         console.log("dog ids", response.data);
         setDogIds(response.data.resultIds);
+        setTotalDogCount(response.data.total);
       })
       .catch((error: AxiosError) => {
         console.error("dog ids error", error);
+        if (error.status === 401) {
+          handleSetAuthorization(false);
+        }
       })
       .finally(() => {
         clearTimeout(loadingTimer);
@@ -83,7 +99,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     searchForDogs();
     // fetchAllBreeds();
-  }, [filterAscending, filterOption]);
+  }, [filterAscending, filterOption, currentPage]);
 
   // Get dog objects based on dog ids retrieved. Runs on every successful search
   useEffect(() => {
@@ -98,6 +114,9 @@ const Home: React.FC = () => {
         })
         .catch((error: AxiosError) => {
           console.error("dogs error", error);
+          if (error.status === 401) {
+            handleSetAuthorization(false);
+          }
         });
     }
   }, [dogIds]);
@@ -111,18 +130,23 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.content}>
+        {!loading ? (
+          <div className={styles.dogGallery}>{dogBoxes}</div>
+        ) : (
+          <div className={styles.loaderContainer}>Loading...</div>
+        )}
+      </div>
       <div className={styles.searchBarContainer}>
         <SearchBar
           handleSetDogIds={handleSetDogIds}
           filterAscending={filterAscending}
           handleSetFilter={handleSetFilter}
+          totalDogCount={totalDogCount}
+          currentPage={currentPage}
+          handleSetCurrentPage={handleSetCurrentPage}
         />
       </div>
-      {!loading ? (
-        <div className={styles.dogGallery}>{dogBoxes}</div>
-      ) : (
-        <div className={styles.loaderContainer}>Loading...</div>
-      )}
     </div>
   );
 };

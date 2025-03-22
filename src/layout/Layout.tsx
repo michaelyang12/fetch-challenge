@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import PathConstants from "../routes/pathConstants";
 
 function Layout() {
-  const { authorized, handleAuthorization } = useContext(AuthContext);
+  const { authorized, handleSetAuthorization } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,11 +17,11 @@ function Layout() {
       .get(`${api}dogs/breeds`, requestConfig)
       .then((response) => {
         console.log(response.data);
-        handleAuthorization(true);
+        handleSetAuthorization(true);
       })
       .catch((error) => {
         if (error.status === 401) {
-          handleAuthorization(false);
+          handleSetAuthorization(false);
         }
       });
   }, []);

@@ -1,4 +1,36 @@
+@import "../../variables";
+
 .container {
+    /* position: fixed; */
+    bottom: 0;
+    z-index: 999;
+    justify-content: space-between;
+    align-items: center;
     display: flex;
+    padding-inline: 20px;
+    background-color: $beige-brown;
+    color: white;
+    width: 100%;
+    height: auto;
     /* border: 1px solid blue; */
+    .filterContainer,
+    .searchContainer,
+    .pageContainer {
+        display: flex;
+        /* justify-content: center; */
+        align-items: center;
+    }
+    .filterContainer {
+        flex: 0;
+        /* border: 1px solid red; */
+    }
+    .searchContainer {
+        //center
+        flex: 1;
+    }
+    .pageContainer {
+        //right
+        flex: 0;
+        margin-top: 1em;
+    }
 }

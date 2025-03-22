@@ -20,14 +20,14 @@ const Filter: React.FC<FilterProps> = ({
   const [option, setOption] = useState<FilterOptions>("breed");
 
   const handleSetOption = (value: FilterOptions) => {
-    setOption(value);
     handleSetFilter(filterAscending, value);
+    setOption(value);
   };
 
   const OptionSelect: React.FC = () => (
     <Dropdown>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
-        {option}
+        Sort by: {option}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={() => handleSetOption("breed")}>
@@ -45,9 +45,11 @@ const Filter: React.FC<FilterProps> = ({
 
   return (
     <div className={styles.container}>
-      <span className={styles.label}>
-        Filter by <OptionSelect />
-      </span>
+      {/* <span className={styles.label}>Filter</span> */}
+      <div className={styles.optionSelectContainer}>
+        <OptionSelect />
+      </div>
+
       <div className={styles.ascendingContainer}>
         <ButtonGroup aria-label="Basic example">
           <Button

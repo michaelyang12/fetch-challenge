@@ -1,12 +1,8 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
-
+@import "_variables.scss";
 #root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+    background-color: $beige;
 }
-
 .logo {
     height: 6em;
     padding: 1.5em;
