@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    /* border: 1px solid red; */
+    width: 50%;
+    .label {
+        margin-right: 1em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
+    }
+    .ascendingContainer {
+        /* width: 100%; */
+    }
+}

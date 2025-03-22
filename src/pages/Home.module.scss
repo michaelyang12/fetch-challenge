@@ -2,11 +2,15 @@
     width: 100vw;
     .dogGallery {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+        grid-template-columns: repeat(3, 1fr);
         grid-gap: 20px;
         padding: 20px;
-        width: 100%; /* Ensure full width usage */
-        max-width: 90%; /* Optional: cap maximum width */
-        margin: 0 auto; /* Center the gallery */
+        width: 100%;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    .loaderContainer {
+        height: 90vh;
     }
 }
