@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
             Email
           </Form.Text>
           <Form.Control
-            type="text"
+            type="email"
             id="inputEmail"
             value={email}
             onChange={handleSetEmailChange}

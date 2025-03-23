@@ -1,5 +1,4 @@
 import styles from "./HeaderBar.module.scss";
-import Logout from "../Logout/Logout";
 import { api, requestConfig } from "../../constants";
 import axios from "axios";
 import { Button } from "react-bootstrap";

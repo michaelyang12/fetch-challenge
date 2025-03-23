@@ -1,26 +1,23 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import styles from "./Filter.module.scss";
-import { FilterOptions } from "../../../pages/Home";
+import styles from "./Sort.module.scss";
+import { SortOptions } from "../../../pages/Home";
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 
-export interface FilterProps {
-  // option: FilterOptions;
-  filterAscending: boolean;
-  handleSetFilter: (value: boolean, option: FilterOptions) => void;
+export interface SortProps {
+  // option: SortOptions;
+  sortAscending: boolean;
+  handleSetSort: (value: boolean, option: SortOptions) => void;
 }
 
-//TODO: Add filter by breed & age
-const Filter: React.FC<FilterProps> = ({
-  filterAscending,
-  handleSetFilter,
-}) => {
+//TODO: Add sort by breed & age
+const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
   //TODO: Add select filter type
-  const [option, setOption] = useState<FilterOptions>("breed");
+  const [option, setOption] = useState<SortOptions>("breed");
 
-  const handleSetOption = (value: FilterOptions) => {
-    handleSetFilter(filterAscending, value);
+  const handleSetOption = (value: SortOptions) => {
+    handleSetSort(sortAscending, value);
     setOption(value);
   };
 
@@ -53,14 +50,14 @@ const Filter: React.FC<FilterProps> = ({
       <div className={styles.ascendingContainer}>
         <ButtonGroup aria-label="Basic example">
           <Button
-            variant={!filterAscending ? "outline-secondary" : "secondary"}
-            onClick={() => handleSetFilter(true, option)}
+            variant={!sortAscending ? "outline-secondary" : "secondary"}
+            onClick={() => handleSetSort(true, option)}
           >
             Ascending
           </Button>
           <Button
-            variant={filterAscending ? "outline-secondary" : "secondary"}
-            onClick={() => handleSetFilter(false, option)}
+            variant={sortAscending ? "outline-secondary" : "secondary"}
+            onClick={() => handleSetSort(false, option)}
           >
             Descending
           </Button>
@@ -70,4 +67,4 @@ const Filter: React.FC<FilterProps> = ({
   );
 };
 
-export default Filter;
+export default Sort;

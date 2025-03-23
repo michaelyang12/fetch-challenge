@@ -1,8 +1,4 @@
-import axios from "axios";
-import { api, requestConfig } from "../../constants";
-import { Button } from "react-bootstrap";
-import AuthContext from "../../contexts/AuthContext";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import Pagination from "react-bootstrap/Pagination";
 import { perPageResults } from "../../../constants";
 import styles from "./Paginator.module.scss";

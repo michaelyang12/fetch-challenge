@@ -15,17 +15,20 @@ import AuthContext from "../contexts/AuthContext";
 //TODO: Make filter component
 //TODO: Make paginator
 //TODO: Add favorites
-export type FilterOptions = "breed" | "age" | "name";
+export type SortOptions = "breed" | "age" | "name";
+
 const Home: React.FC = () => {
   const { handleSetAuthorization } = useContext(AuthContext);
+
   const [dogIds, setDogIds] = useState<number[]>([]);
   const [dogData, setDogData] = useState<Dog[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [favorites, setFavorites] = useState<Dog[]>([]); //Store either dog object or dog id
-  const [filterAscending, setFilterAscending] = useState<boolean>(true);
-  const [filterOption, setFilterOption] = useState<FilterOptions>("breed");
+  const [sortAscending, setSortAscending] = useState<boolean>(true);
+  const [sortOption, setSortOption] = useState<SortOptions>("breed");
   const [loading, setLoading] = useState<boolean>(false);
-  const [breeds, setBreeds] = useState<string[]>([]);
+  const [filters, setFilters] = useState<string[]>([]);
+
   const [totalDogCount, setTotalDogCount] = useState<number>(0);
 
   const handleSetCurrentPage = (value: number) => {
@@ -36,28 +39,15 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleSetFilter = (value: boolean, option: FilterOptions) => {
-    console.log(`Filtering by ${option}:`, filterAscending, option);
-    setFilterAscending(value);
-    setFilterOption(option);
+  const handleSetSort = (value: boolean, option: SortOptions) => {
+    console.log(`Filtering by ${option}:`, sortAscending, option);
+    setSortAscending(value);
+    setSortOption(option);
   };
 
   const handleSetDogIds = (value: number[]) => {
     console.log("Current IDs:", value);
     setDogIds(value);
-  };
-
-  const fetchAllBreeds = () => {
-    const url = `${api}dogs/breeds`;
-    axios
-      .get(url, requestConfig)
-      .then((response: AxiosResponse) => {
-        console.log("breeds", response.data);
-        setBreeds(response.data);
-      })
-      .catch((error: AxiosError) => {
-        console.error("breeds error", error);
-      });
   };
 
   const searchForDogs = () => {
@@ -69,8 +59,9 @@ const Home: React.FC = () => {
     // Adjust params based on states
     const params = {
       params: {
-        sort: filterAscending ? `${filterOption}:asc` : `${filterOption}:desc`,
+        sort: sortAscending ? `${sortOption}:asc` : `${sortOption}:desc`,
         from: (currentPage - 1) * perPageResults,
+        breeds: filters.length > 0 ? filters : null,
       },
       withCredentials: true,
     };
@@ -99,7 +90,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     searchForDogs();
     // fetchAllBreeds();
-  }, [filterAscending, filterOption, currentPage]);
+  }, [sortAscending, sortOption, currentPage]);
 
   // Get dog objects based on dog ids retrieved. Runs on every successful search
   useEffect(() => {
@@ -139,9 +130,11 @@ const Home: React.FC = () => {
       </div>
       <div className={styles.searchBarContainer}>
         <SearchBar
-          handleSetDogIds={handleSetDogIds}
-          filterAscending={filterAscending}
-          handleSetFilter={handleSetFilter}
+          searchForDogs={searchForDogs}
+          filters={filters}
+          setFilters={setFilters}
+          sortAscending={sortAscending}
+          handleSetSort={handleSetSort}
           totalDogCount={totalDogCount}
           currentPage={currentPage}
           handleSetCurrentPage={handleSetCurrentPage}
