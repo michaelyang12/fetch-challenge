@@ -82,7 +82,6 @@ const Home: React.FC = () => {
       })
       .finally(() => {
         clearTimeout(loadingTimer);
-        setLoading(false);
       });
   };
 
@@ -108,9 +107,16 @@ const Home: React.FC = () => {
           if (error.status === 401) {
             handleSetAuthorization(false);
           }
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   }, [dogIds]);
+
+  useEffect(() => {
+    console.log("loading changed", loading);
+  }, [loading]);
 
   //Render images for each dog, memoized.
   const dogBoxes: JSX.Element[] = useMemo(() => {

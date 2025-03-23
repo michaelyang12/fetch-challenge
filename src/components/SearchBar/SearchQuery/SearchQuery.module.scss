@@ -1,31 +1,74 @@
+@import "../../../variables";
+.toastContainer {
+    position: fixed;
+    bottom: 9%;
+    right: 0;
+}
 .suggestionsContainer {
     position: fixed;
+    z-index: 0;
     bottom: 7%;
-    left: 0;
-    width: 100%;
+    left: 35%;
+    width: 20%;
+    text-align: center;
     max-height: 150px;
     overflow-y: auto;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
     margin-top: 5px;
     padding: 5px 0;
     box-sizing: border-box;
+
     .suggestion {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 5px;
+        background-color: $beige;
     }
 
     .suggestion:hover {
         cursor: pointer;
-        background-color: red;
+        background-color: #f0e6dc;
     }
 }
 
-.pillBox {
-    overflow: auto;
-    height: 7vh;
+.searchContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    /* border: 1px solid red; */
+    .searchBox {
+        width: 50%;
+        /* border: 1px solid blue; */
+    }
+    .pillBox {
+        overflow: auto;
+        height: 7vh;
+        width: 50%;
+        /* border: 1px solid red; */
+        /* display: flex; */
+        padding-inline: 25px;
 
-    .pill {
+        .pill {
+            font-size: 10pt;
+            background-color: $matcha;
+            border-radius: 15px;
+            width: auto;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .pillText {
+                margin-left: 10px;
+            }
+
+            .closeButton {
+                margin-right: 5px;
+            }
+        }
     }
 }

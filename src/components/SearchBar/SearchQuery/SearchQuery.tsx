@@ -2,20 +2,42 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "./SearchQuery.module.scss";
 import { api, requestConfig } from "../../../constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Form } from "react-bootstrap";
+import { CloseButton, Form, Toast, ToastContainer } from "react-bootstrap";
 import { JSX } from "react/jsx-dev-runtime";
 
 interface SearchQueryProps {
   filters: string[];
-  handleAddFilter: (value: string) => void;
+  setFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const SearchQuery: React.FC<SearchQueryProps> = ({
-  filters,
-  handleAddFilter,
-}) => {
+const SearchQuery: React.FC<SearchQueryProps> = ({ filters, setFilters }) => {
   const [query, setQuery] = useState<string>("");
   const [availableBreeds, setAvailableBreeds] = useState<string[]>([]);
+  const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
+  const [showErrorToast, setShowErrorToast] = useState<boolean>(false);
+  const [lastSuggestion, setLastSuggestion] = useState<string>("");
+
+  const handleAddFilter = (breed: string) => {
+    setFilters((prev) => {
+      if (!prev.includes(breed)) {
+        return [...prev, breed];
+      } else {
+        return prev;
+      }
+    });
+  };
+
+  const handleDeleteFilter = (breed: string) => {
+    setFilters((prev) => {
+      if (!prev.includes(breed)) {
+        return prev;
+      } else {
+        const indexToRemove = prev.indexOf(breed);
+        const _prev = prev.filter((_, i) => i !== indexToRemove);
+        return _prev;
+      }
+    });
+  };
 
   useEffect(() => {
     const url = `${api}dogs/breeds`;
@@ -45,7 +67,7 @@ const SearchQuery: React.FC<SearchQueryProps> = ({
       <Form.Control
         type="text"
         id="inputBreed"
-        placeholder="Search by breed"
+        placeholder="Filter by breed"
         value={query}
         onChange={handleSetQuery}
       />
@@ -53,12 +75,40 @@ const SearchQuery: React.FC<SearchQueryProps> = ({
   );
 
   const handleSelectSuggestion = (suggestion: string) => {
-    handleAddFilter(suggestion);
+    if (filters.includes(suggestion)) {
+      setLastSuggestion(suggestion);
+      setShowErrorToast(true);
+      return;
+    }
+
+    setLastSuggestion(suggestion);
+    setShowSuccessToast(true);
     setQuery("");
+    handleAddFilter(suggestion);
   };
 
   return (
     <>
+      <ToastContainer className={styles.toastContainer}>
+        <Toast
+          onClose={() => setShowSuccessToast(false)}
+          show={showSuccessToast}
+          delay={4000}
+          autohide
+        >
+          <Toast.Body>Filter: {lastSuggestion} added.</Toast.Body>
+        </Toast>
+        <Toast
+          onClose={() => setShowErrorToast(false)}
+          show={showErrorToast}
+          delay={4000}
+          autohide
+        >
+          <Toast.Body>
+            Error adding filter: {lastSuggestion}. Filter already added
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
       {query != "" ? (
         <div className={styles.suggestionsContainer}>
           {filteredSuggestions.map((suggestion: string) => {
@@ -73,14 +123,21 @@ const SearchQuery: React.FC<SearchQueryProps> = ({
           })}
         </div>
       ) : null}
-
-      <div className={styles.searchBox}>{SearchBox}</div>
-      <div className={styles.pillBox}>
-        {filters.map((breed: string) => {
-          return <div className={styles.pill}>{breed}</div>;
-        })}
+      <div className={styles.searchContainer}>
+        <div className={styles.searchBox}>{SearchBox}</div>
+        <div className={styles.pillBox}>
+          {filters.map((breed: string) => {
+            return (
+              <div className={styles.pill}>
+                <span className={styles.pillText}>{breed}</span>
+                <span className={styles.closeButton}>
+                  <CloseButton onClick={() => handleDeleteFilter(breed)} />
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div className={styles.apply}></div>
     </>
   );
 };

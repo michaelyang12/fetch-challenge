@@ -23,24 +23,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   // const [filters, setFilters] = useState<string[]>([]);
 
-  const handleAddFilter = (breed: string) => {
-    setFilters((prev) => {
-      if (!prev.includes(breed)) {
-        return [...prev, breed];
-      } else {
-        return prev;
-      }
-    });
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <Filter sortAscending={sortAscending} handleSetSort={handleSetSort} />
       </div>
       <div className={styles.searchContainer}>
-        <SearchQuery filters={filters} handleAddFilter={handleAddFilter} />
-        <Button onClick={() => searchForDogs(filters)}>Search</Button>
+        <SearchQuery filters={filters} setFilters={setFilters} />
+        <Button
+          disabled={!filters || filters.length == 0}
+          onClick={() => searchForDogs(filters)}
+        >
+          Search
+        </Button>
       </div>
       <div className={styles.pageContainer}>
         <Paginator
