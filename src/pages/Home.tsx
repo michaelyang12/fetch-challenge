@@ -7,6 +7,7 @@ import { JSX } from "react/jsx-dev-runtime";
 import DogBox from "../components/DogBox/DogBox";
 import SearchBar from "../components/SearchBar/SearchBar";
 import AuthContext from "../contexts/AuthContext";
+import { Spinner } from "react-bootstrap";
 
 ///TODO: Add filter by breed
 ///TODO: Sort alphabetically by breed
@@ -131,7 +132,9 @@ const Home: React.FC = () => {
         {!loading ? (
           <div className={styles.dogGallery}>{dogBoxes}</div>
         ) : (
-          <div className={styles.loaderContainer}>Loading...</div>
+          <div className={styles.loaderContainer}>
+            <Spinner animation="border" variant="secondary" />.
+          </div>
         )}
       </div>
       <div className={styles.searchBarContainer}>

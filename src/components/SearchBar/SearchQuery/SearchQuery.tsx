@@ -10,6 +10,7 @@ interface SearchQueryProps {
   setFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
+//TODO: Add toast notif for filter deletion?
 const SearchQuery: React.FC<SearchQueryProps> = ({ filters, setFilters }) => {
   const [query, setQuery] = useState<string>("");
   const [availableBreeds, setAvailableBreeds] = useState<string[]>([]);
