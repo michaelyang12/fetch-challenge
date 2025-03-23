@@ -23,7 +23,7 @@ const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
 
   const OptionSelect: React.FC = () => (
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
+      <Dropdown.Toggle variant="success" id="dropdown-basic" size="sm">
         Sort by: {option}
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -50,12 +50,14 @@ const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
       <div className={styles.ascendingContainer}>
         <ButtonGroup aria-label="Basic example">
           <Button
+            size="sm"
             variant={!sortAscending ? "outline-secondary" : "secondary"}
             onClick={() => handleSetSort(true, option)}
           >
             Ascending
           </Button>
           <Button
+            size="sm"
             variant={sortAscending ? "outline-secondary" : "secondary"}
             onClick={() => handleSetSort(false, option)}
           >

@@ -9,13 +9,8 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import AuthContext from "../contexts/AuthContext";
 import { Spinner } from "react-bootstrap";
 
-///TODO: Add filter by breed
-///TODO: Sort alphabetically by breed
-///TODO: ^^ Ascending/descending
-//Move this stuff to different component within SearchBar (keep state vars here but pass down as props)
-//TODO: Make filter component
-//TODO: Make paginator
-//TODO: Add favorites
+//TODO: Add favorites.
+//TODO: Add _/total results at bottom of page.
 export type SortOptions = "breed" | "age" | "name";
 
 const Home: React.FC = () => {
@@ -51,22 +46,22 @@ const Home: React.FC = () => {
     setDogIds(value);
   };
 
-  const searchForDogs = () => {
+  const searchForDogs = useCallback(() => {
     // Only show loader if >500ms elapsed
     const loadingTimer = setTimeout(() => {
       setLoading(true);
     }, 500);
-
+    console.log("running search");
     // Adjust params based on states
     const params = {
       params: {
         sort: sortAscending ? `${sortOption}:asc` : `${sortOption}:desc`,
         from: (currentPage - 1) * perPageResults,
         breeds: filters.length > 0 ? filters : null,
+        size: perPageResults,
       },
       withCredentials: true,
     };
-
     // Run search
     axios
       .get(`${api}dogs/search`, params)
@@ -84,18 +79,25 @@ const Home: React.FC = () => {
       .finally(() => {
         clearTimeout(loadingTimer);
       });
+  }, [currentPage, sortOption, sortAscending, filters]);
+
+  const clearSearchFilters = () => {
+    setFilters([]);
+    searchForDogs(true);
   };
 
-  // On initial page load and on search/filter change, get relevant dog ids
+  useEffect(() => {
+    handleSetCurrentPage(1);
+  }, [sortAscending, sortOption, filters]);
+
   useEffect(() => {
     searchForDogs();
-    // fetchAllBreeds();
-  }, [sortAscending, sortOption, currentPage]);
+  }, [searchForDogs]);
 
   // Get dog objects based on dog ids retrieved. Runs on every successful search
   useEffect(() => {
     if (dogIds) {
-      console.log("ids", dogIds);
+      // console.log("ids", dogIds);
       const url = `${api}dogs`;
       axios
         .post(url, dogIds, requestConfig)
@@ -142,6 +144,7 @@ const Home: React.FC = () => {
           searchForDogs={searchForDogs}
           filters={filters}
           setFilters={setFilters}
+          clearSearchFilters={clearSearchFilters}
           sortAscending={sortAscending}
           handleSetSort={handleSetSort}
           totalDogCount={totalDogCount}

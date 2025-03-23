@@ -22,7 +22,9 @@ const DogBox: React.FC<DogBoxProps> = ({ dogData }) => {
         </div>
         <div className={styles.breed}>
           {dogData.breed}
-          <span className={styles.age}> - {dogData.age} years</span>
+          <span className={styles.age}>
+            - {dogData.age} {dogData.age != 1 ? "years old" : "year old"}
+          </span>
         </div>
         {/* <div className={styles.breed}>Breed: {dogData.breed}</div> */}
       </div>

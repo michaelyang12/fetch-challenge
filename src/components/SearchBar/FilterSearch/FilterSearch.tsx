@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import styles from "./SearchQuery.module.scss";
+import styles from "./FilterSearch.module.scss";
 import { api, requestConfig } from "../../../constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { CloseButton, Form, Toast, ToastContainer } from "react-bootstrap";
 import { JSX } from "react/jsx-dev-runtime";
 
-interface SearchQueryProps {
+export interface FilterSearchProps {
   filters: string[];
   setFilters: React.Dispatch<React.SetStateAction<string[]>>;
+  clearSearchFilters: () => void;
 }
 
 //TODO: Add toast notif for filter deletion?
-const SearchQuery: React.FC<SearchQueryProps> = ({ filters, setFilters }) => {
+const FilterSearch: React.FC<FilterSearchProps> = ({
+  filters,
+  setFilters,
+  clearSearchFilters,
+}) => {
   const [query, setQuery] = useState<string>("");
   const [availableBreeds, setAvailableBreeds] = useState<string[]>([]);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
@@ -35,6 +40,9 @@ const SearchQuery: React.FC<SearchQueryProps> = ({ filters, setFilters }) => {
       } else {
         const indexToRemove = prev.indexOf(breed);
         const _prev = prev.filter((_, i) => i !== indexToRemove);
+        // if (_prev.length == 0) {
+        //   clearSearchFilters();
+        // }
         return _prev;
       }
     });
@@ -143,4 +151,4 @@ const SearchQuery: React.FC<SearchQueryProps> = ({ filters, setFilters }) => {
   );
 };
 
-export default SearchQuery;
+export default FilterSearch;
