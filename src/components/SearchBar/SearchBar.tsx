@@ -15,7 +15,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchForDogs,
   filters,
   setFilters,
-  clearSearchFilters,
   sortAscending,
   handleSetSort,
   totalDogCount,
@@ -23,6 +22,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleSetCurrentPage,
 }) => {
   // const [filters, setFilters] = useState<string[]>([]);
+  const clearSearchFilters = () => {
+    setFilters([]);
+  };
 
   return (
     <div className={styles.container}>
@@ -30,11 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Filter sortAscending={sortAscending} handleSetSort={handleSetSort} />
       </div>
       <div className={styles.searchContainer}>
-        <FilterSearch
-          filters={filters}
-          setFilters={setFilters}
-          clearSearchFilters={clearSearchFilters}
-        />
+        <FilterSearch filters={filters} setFilters={setFilters} />
         <div className={styles.buttonContainer}>
           <Button
             disabled={!filters || filters.length == 0}

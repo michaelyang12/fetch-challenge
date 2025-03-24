@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./FilterSearch.module.scss";
 import { api, requestConfig } from "../../../constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -8,20 +8,17 @@ import { JSX } from "react/jsx-dev-runtime";
 export interface FilterSearchProps {
   filters: string[];
   setFilters: React.Dispatch<React.SetStateAction<string[]>>;
-  clearSearchFilters: () => void;
 }
 
 //TODO: Add toast notif for filter deletion?
-const FilterSearch: React.FC<FilterSearchProps> = ({
-  filters,
-  setFilters,
-  clearSearchFilters,
-}) => {
+const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
   const [query, setQuery] = useState<string>("");
   const [availableBreeds, setAvailableBreeds] = useState<string[]>([]);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
   const [showErrorToast, setShowErrorToast] = useState<boolean>(false);
   const [lastSuggestion, setLastSuggestion] = useState<string>("");
+
+  const mostRecentRef = useRef<HTMLDivElement | null>(null);
 
   const handleAddFilter = (breed: string) => {
     setFilters((prev) => {
@@ -96,6 +93,10 @@ const FilterSearch: React.FC<FilterSearchProps> = ({
     handleAddFilter(suggestion);
   };
 
+  useEffect(() => {
+    mostRecentRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [filters]); // Runs whenever `messages` updates
+
   return (
     <>
       <ToastContainer className={styles.toastContainer}>
@@ -145,6 +146,7 @@ const FilterSearch: React.FC<FilterSearchProps> = ({
               </div>
             );
           })}
+          <div ref={mostRecentRef} />
         </div>
       </div>
     </>

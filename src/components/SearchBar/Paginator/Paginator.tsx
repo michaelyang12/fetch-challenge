@@ -5,7 +5,7 @@ import styles from "./Paginator.module.scss";
 export interface PaginatorProps {
   totalDogCount: number;
   currentPage: number;
-  handleSetCurrentPage: (value: number) => void;
+  handleSetCurrentPage: (page: number) => void;
 }
 
 const Paginator: React.FC<PaginatorProps> = ({

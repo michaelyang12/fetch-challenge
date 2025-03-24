@@ -8,18 +8,25 @@ import DogBox from "../components/DogBox/DogBox";
 import SearchBar from "../components/SearchBar/SearchBar";
 import AuthContext from "../contexts/AuthContext";
 import { Spinner } from "react-bootstrap";
+import { Prev } from "react-bootstrap/esm/PageItem";
+import FavoritesContext from "../contexts/FavoritesContext";
 
 //TODO: Add favorites.
 //TODO: Add _/total results at bottom of page.
+//TODO: Fix bug where page number can become decimal if skip to last page
+//TODO: Indicate total pages and add disables for front/end.
+//TODO: Add "HOME", "FAVORITES", and "See Your Match" pages and routes to header bar
+//TODO: Add zip code to dogbox
 export type SortOptions = "breed" | "age" | "name";
 
 const Home: React.FC = () => {
   const { handleSetAuthorization } = useContext(AuthContext);
+  const { favorites } = useContext(FavoritesContext);
 
-  const [dogIds, setDogIds] = useState<number[]>([]);
+  const [dogIds, setDogIds] = useState<string[]>([]);
   const [dogData, setDogData] = useState<Dog[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [favorites, setFavorites] = useState<Dog[]>([]); //Store either dog object or dog id
+  // const [favorites, setFavorites] = useState<string[]>([]);
   const [sortAscending, setSortAscending] = useState<boolean>(true);
   const [sortOption, setSortOption] = useState<SortOptions>("breed");
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,9 +34,17 @@ const Home: React.FC = () => {
 
   const [totalDogCount, setTotalDogCount] = useState<number>(0);
 
-  const handleSetCurrentPage = (value: number) => {
-    if (value > 0 && value <= totalDogCount / perPageResults) {
-      setCurrentPage(value);
+  // const handleSetFavorites = (dogId: string) => {
+  //   setFavorites((prev) =>
+  //     prev.includes(dogId)
+  //       ? prev.filter((id) => id !== dogId)
+  //       : [...prev, dogId],
+  //   );
+  // };
+
+  const handleSetCurrentPage = (page: number) => {
+    if (page > 0 && page <= totalDogCount / perPageResults) {
+      setCurrentPage(page);
     } else {
       console.warn("Page number must be a positive value");
     }
@@ -41,7 +56,7 @@ const Home: React.FC = () => {
     setSortOption(option);
   };
 
-  const handleSetDogIds = (value: number[]) => {
+  const handleSetDogIds = (value: string[]) => {
     console.log("Current IDs:", value);
     setDogIds(value);
   };
@@ -52,6 +67,7 @@ const Home: React.FC = () => {
       setLoading(true);
     }, 500);
     console.log("running search");
+
     // Adjust params based on states
     const params = {
       params: {
@@ -62,6 +78,7 @@ const Home: React.FC = () => {
       },
       withCredentials: true,
     };
+
     // Run search
     axios
       .get(`${api}dogs/search`, params)
@@ -81,23 +98,8 @@ const Home: React.FC = () => {
       });
   }, [currentPage, sortOption, sortAscending, filters]);
 
-  const clearSearchFilters = () => {
-    setFilters([]);
-    searchForDogs(true);
-  };
-
-  useEffect(() => {
-    handleSetCurrentPage(1);
-  }, [sortAscending, sortOption, filters]);
-
-  useEffect(() => {
-    searchForDogs();
-  }, [searchForDogs]);
-
-  // Get dog objects based on dog ids retrieved. Runs on every successful search
-  useEffect(() => {
+  const loadDogDataFromIds = useCallback(() => {
     if (dogIds) {
-      // console.log("ids", dogIds);
       const url = `${api}dogs`;
       axios
         .post(url, dogIds, requestConfig)
@@ -118,15 +120,36 @@ const Home: React.FC = () => {
   }, [dogIds]);
 
   useEffect(() => {
-    console.log("loading changed", loading);
-  }, [loading]);
+    console.log("favs", favorites);
+  }, [favorites]);
 
-  //Render images for each dog, memoized.
-  const dogBoxes: JSX.Element[] = useMemo(() => {
-    return dogData.map((dog: Dog) => {
-      return <DogBox dogData={dog} />;
-    });
+  useEffect(() => {
+    handleSetCurrentPage(1);
+  }, [sortAscending, sortOption, filters]);
+
+  useEffect(() => {
+    searchForDogs();
+  }, [searchForDogs]);
+
+  // Get dog objects based on dog ids retrieved. Runs on every successful search
+  useEffect(() => {
+    loadDogDataFromIds();
+  }, [loadDogDataFromIds]);
+
+  useEffect(() => {
+    console.log("dogs", dogData);
   }, [dogData]);
+
+  //Render containers for each dog, memoized.
+  const dogBoxes: JSX.Element[] = useMemo(() => {
+    return dogData.map((dog: Dog) => (
+      <DogBox
+        key={dog.id}
+        dogData={dog}
+        favorited={favorites.includes(dog.id)}
+      />
+    ));
+  }, [dogData, favorites]);
 
   return (
     <div className={styles.container}>
@@ -144,7 +167,6 @@ const Home: React.FC = () => {
           searchForDogs={searchForDogs}
           filters={filters}
           setFilters={setFilters}
-          clearSearchFilters={clearSearchFilters}
           sortAscending={sortAscending}
           handleSetSort={handleSetSort}
           totalDogCount={totalDogCount}

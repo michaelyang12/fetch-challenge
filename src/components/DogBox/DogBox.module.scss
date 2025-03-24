@@ -10,17 +10,35 @@
         padding: 15px;
         text-align: center;
     }
-    .info {
-        /* text-align: center; */
-        padding: 10px;
-        .name {
-            font-size: 16pt;
-        }
-        .breed {
-            font-size: 12pt;
-            .age {
+    .infoContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid yellow; */
+        .info {
+            padding: 10px;
+            /* border: 1px solid blue; */
+            /* margin-bottom: 15px; */
+
+            .name {
+                font-size: 16pt;
+            }
+
+            .breed {
+                font-size: 12pt;
+                .age {
+                    color: gray;
+                }
+            }
+
+            .zipcode {
                 color: gray;
             }
+        }
+
+        .favorite {
+            padding: 35px;
+            /* border: 1px solid red; */
         }
     }
 }
