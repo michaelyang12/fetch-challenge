@@ -1,15 +1,17 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 interface FavoritesContextType {
   favorites: string[];
   addFavorite: (dogId: string) => void;
   removeFavorite: (dogId: string) => void;
+  clearFavorites: () => void;
 }
 
 const FavoritesContext = createContext<FavoritesContextType>({
   favorites: [],
   addFavorite: () => {},
   removeFavorite: () => {},
+  clearFavorites: () => {},
 });
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({

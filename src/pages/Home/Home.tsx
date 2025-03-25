@@ -1,20 +1,20 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Dog } from "../../models";
 import axios, { AxiosResponse } from "axios";
-import { api, perPageResults } from "../../constants";
-import pageStyles from "../pages.module.scss";
-import styles from "./Home.module.scss";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { JSX } from "react/jsx-dev-runtime";
 import DogBox from "../../components/DogBox/DogBox";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { api, perPageResults } from "../../constants";
 import AuthContext from "../../contexts/AuthContext";
-import { Spinner } from "react-bootstrap";
 import FavoritesContext from "../../contexts/FavoritesContext";
 import { getDogObjectsFromIds } from "../../functions";
+import { Dog } from "../../models";
+import pageStyles from "../pages.module.scss";
+import styles from "./Home.module.scss";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 //TODO: Add _/total results at bottom of page.
 //TODO: Fix bug where page number can become decimal if skip to last page
-//TODO: Indicate total pages and add disables for front/end.
+//TODO: Fix page system (doesn't show last page which may be < perPageResult dogs)
 export type SortOptions = "breed" | "age" | "name";
 
 const Home: React.FC = () => {
@@ -44,9 +44,7 @@ const Home: React.FC = () => {
   };
 
   const getDogObjects = async () => {
-    const loadingTimer = setTimeout(() => {
-      setLoading(true);
-    }, 500);
+    setLoading(true);
 
     // Adjust params based on states
     const params = {
@@ -66,19 +64,13 @@ const Home: React.FC = () => {
       );
       const dogIds = idsResponse.data.resultIds;
       setTotalDogCount(idsResponse.data.total);
-      await getDogObjectsFromIds(
-        dogIds,
-        setDogData,
-        handleSetAuthorization,
-        setLoading,
-      );
+      await getDogObjectsFromIds(dogIds, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
       console.error("error searching for dogs", error);
       if (axios.isAxiosError(error) && error.status === 401) {
         handleSetAuthorization(false);
       }
     } finally {
-      clearTimeout(loadingTimer);
       setLoading(false);
     }
   };
@@ -108,9 +100,7 @@ const Home: React.FC = () => {
         {!loading ? (
           <section className={pageStyles.dogGallery}>{dogBoxes}</section>
         ) : (
-          <div className={pageStyles.loaderContainer}>
-            <Spinner animation="border" variant="secondary" />
-          </div>
+          <LoadingSpinner />
         )}
       </section>
       <footer className={styles.searchBarContainer}>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { api, requestConfig } from "../../constants";
 import styles from "./LoginForm.module.scss";
@@ -13,7 +13,7 @@ const LoginForm: React.FC = () => {
 
   const { handleSetAuthorization } = useContext(AuthContext);
 
-  const submitCredentials = useCallback(() => {
+  const submitCredentials = () => {
     const url = `${api}auth/login`;
     const data = {
       name: name,
@@ -36,7 +36,7 @@ const LoginForm: React.FC = () => {
           setDisplayError(true);
         }
       });
-  }, [name, email]);
+  };
 
   const handleSetNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -45,10 +45,6 @@ const LoginForm: React.FC = () => {
   const handleSetEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-
-  useEffect(() => {
-    console.log(name, email);
-  }, [name, email]);
 
   return (
     <main className={styles.container}>

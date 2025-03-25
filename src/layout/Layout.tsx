@@ -1,5 +1,5 @@
 import AuthContext from "../contexts/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import HeaderBar from "../components/HeaderBar/HeaderBar";
 import axios from "axios";
 import { api, requestConfig } from "../constants";
@@ -8,31 +8,38 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PathConstants from "../routes/pathConstants";
 
+//TODO: Make loading page component and use in all pages
 function Layout() {
   const { authorized, handleSetAuthorization } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     axios
       .get(`${api}dogs/breeds`, requestConfig)
       .then((response) => {
-        console.log(response.data);
+        console.log("auth check in layout:", response.data);
         handleSetAuthorization(true);
       })
       .catch((error) => {
         if (error.status === 401) {
           handleSetAuthorization(false);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    if (authorized) {
-      navigate(PathConstants.HOME);
-    } else {
-      navigate(PathConstants.AUTH);
+    if (!loading) {
+      if (authorized) {
+        navigate(PathConstants.HOME);
+      } else {
+        navigate(PathConstants.AUTH);
+      }
     }
-  }, [authorized]);
+  }, [authorized, loading]);
 
   return (
     <div className={styles.container}>

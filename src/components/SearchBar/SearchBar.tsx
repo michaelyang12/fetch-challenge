@@ -1,14 +1,9 @@
 import Filter, { SortProps } from "./Sort/Sort";
 import Paginator, { PaginatorProps } from "./Paginator/Paginator";
 import styles from "./SearchBar.module.scss";
-import { Button, ToggleButton } from "react-bootstrap";
 import FilterSearch, { FilterSearchProps } from "./FilterSearch/FilterSearch";
-import { useState } from "react";
 
-interface SearchBarProps extends SortProps, PaginatorProps, FilterSearchProps {
-  // filters: string[];
-  // setFilters: React.Dispatch<React.SetStateAction<string[]>>;
-}
+interface SearchBarProps extends SortProps, PaginatorProps, FilterSearchProps {}
 
 //TODO: Add search with dropdown (i.e. typing "gold" should list out all breed names corresponding to that)
 const SearchBar: React.FC<SearchBarProps> = ({

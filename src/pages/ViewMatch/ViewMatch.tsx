@@ -1,14 +1,14 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import pageStyles from "../pages.module.scss";
-import styles from "./ViewMatch.module.scss";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import DogBox from "../../components/DogBox/DogBox";
+import { api, requestConfig } from "../../constants";
 import AuthContext from "../../contexts/AuthContext";
 import FavoritesContext from "../../contexts/FavoritesContext";
-import { Dog, Match } from "../../models";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { api, requestConfig } from "../../constants";
-import DogBox from "../../components/DogBox/DogBox";
 import { getDogObjectsFromIds } from "../../functions";
-import { Spinner } from "react-bootstrap";
+import { Dog, Match } from "../../models";
+import pageStyles from "../pages.module.scss";
+import styles from "./ViewMatch.module.scss";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 export type SortOptions = "breed" | "age" | "name";
 
@@ -20,24 +20,18 @@ const ViewMatch: React.FC = () => {
   const [matchDog, setMatchDog] = useState<Dog[] | null>(null);
 
   const getMatchDog = async () => {
-    const loadingTimer = setTimeout(() => {
-      setLoading(true);
-    }, 500);
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${api}dogs/match`,
         favorites,
         requestConfig,
       );
-
       const matchObject: Match = response.data;
-
       await getDogObjectsFromIds(
         [matchObject.match],
         setMatchDog,
         handleSetAuthorization,
-        setLoading,
       );
     } catch (error: unknown) {
       console.error("dog match id error", error);
@@ -45,7 +39,7 @@ const ViewMatch: React.FC = () => {
         handleSetAuthorization(false);
       }
     } finally {
-      clearTimeout(loadingTimer);
+      setLoading(false);
     }
   };
 
@@ -81,9 +75,7 @@ const ViewMatch: React.FC = () => {
             ) : null}
           </div>
         ) : (
-          <div className={pageStyles.loaderContainer}>
-            <Spinner animation="border" variant="secondary" />
-          </div>
+          <LoadingSpinner />
         )}
       </section>
     </main>

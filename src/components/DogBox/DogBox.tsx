@@ -1,7 +1,7 @@
 import { ToggleButton } from "react-bootstrap";
 import { Dog } from "../../models";
 import styles from "./DogBox.module.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Heart } from "lucide-react";
 import FavoritesContext from "../../contexts/FavoritesContext";
 
@@ -12,6 +12,7 @@ interface DogBoxProps {
   match?: boolean;
   imgHeight?: number;
 }
+
 const DogBox: React.FC<DogBoxProps> = ({
   dogData,
   favorited,

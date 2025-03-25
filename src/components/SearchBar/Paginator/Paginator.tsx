@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import Pagination from "react-bootstrap/Pagination";
 import { perPageResults } from "../../../constants";
 import styles from "./Paginator.module.scss";
+
 export interface PaginatorProps {
   totalDogCount: number;
   currentPage: number;
@@ -14,9 +15,10 @@ const Paginator: React.FC<PaginatorProps> = ({
   handleSetCurrentPage,
 }) => {
   const totalPageCount = useMemo(
-    () => totalDogCount / perPageResults,
+    () => Math.ceil(totalDogCount / perPageResults),
     [totalDogCount],
   );
+
   return (
     <div className={styles.container}>
       <Pagination>

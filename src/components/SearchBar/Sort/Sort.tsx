@@ -7,14 +7,11 @@ import { Dropdown } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
 export interface SortProps {
-  // option: SortOptions;
   sortAscending: boolean;
   handleSetSort: (value: boolean, option: SortOptions) => void;
 }
 
-//TODO: Add sort by breed & age
 const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
-  //TODO: Add select filter type
   const [option, setOption] = useState<SortOptions>("breed");
 
   const handleSetOption = (value: SortOptions) => {

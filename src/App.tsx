@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./layout/Layout";
 import routes from "./routes";
 import { Suspense } from "react";
+import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
 
 //TODO: Fix logout
 function App() {
@@ -15,7 +16,13 @@ function App() {
   ]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div id="suspense-container">
+          <LoadingSpinner />
+        </div>
+      }
+    >
       <RouterProvider router={router} />
     </Suspense>
   );

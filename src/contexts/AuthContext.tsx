@@ -5,6 +5,7 @@ interface AuthContextType {
   authorized: boolean;
   handleSetAuthorization: (value: boolean) => void;
 }
+
 // Define a context for theme
 const AuthContext = createContext<AuthContextType>({
   authorized: false,
@@ -13,7 +14,7 @@ const AuthContext = createContext<AuthContextType>({
 
 // Create a provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authorized, setAuthorized] = useState<boolean>(true);
+  const [authorized, setAuthorized] = useState<boolean>(false);
 
   const handleSetAuthorization = (value: boolean) => {
     setAuthorized(value);

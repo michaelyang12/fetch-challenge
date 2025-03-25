@@ -1,15 +1,14 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import pageStyles from "../pages.module.scss";
-import styles from "./Favorites.module.scss";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Button } from "react-bootstrap";
+import { JSX } from "react/jsx-dev-runtime";
 import DogBox from "../../components/DogBox/DogBox";
 import AuthContext from "../../contexts/AuthContext";
 import FavoritesContext from "../../contexts/FavoritesContext";
-import { api, requestConfig } from "../../constants";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { Dog } from "../../models";
-import { JSX } from "react/jsx-dev-runtime";
-import { Button, Spinner } from "react-bootstrap";
 import { getDogObjectsFromIds } from "../../functions";
+import { Dog } from "../../models";
+import pageStyles from "../pages.module.scss";
+import styles from "./Favorites.module.scss";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 export type SortOptions = "breed" | "age" | "name";
 
@@ -25,21 +24,13 @@ const Favorites: React.FC = () => {
   };
 
   const getFavoriteDogs = async () => {
-    const loadingTimer = setTimeout(() => {
-      setLoading(true);
-    }, 500);
-
+    setLoading(true);
     try {
-      await getDogObjectsFromIds(
-        favorites,
-        setDogData,
-        handleSetAuthorization,
-        setLoading,
-      );
+      await getDogObjectsFromIds(favorites, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
       console.log("error getting favorites", error);
     } finally {
-      clearTimeout(loadingTimer);
+      setLoading(false);
     }
   };
 
@@ -74,9 +65,7 @@ const Favorites: React.FC = () => {
             </p>
           </section>
         ) : (
-          <div className={pageStyles.loaderContainer}>
-            <Spinner animation="border" variant="secondary" />
-          </div>
+          <LoadingSpinner />
         )}
       </section>
       <footer className={styles.footerBarContainer}>

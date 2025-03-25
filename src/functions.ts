@@ -1,12 +1,12 @@
-import axios, { AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { api, requestConfig } from "./constants";
 import { Dog } from "./models";
 
+// Global function to fetch dog objects given an array of dog ids
 export const getDogObjectsFromIds = async (
   ids: string[],
   handleSetDogData: (dogData: Dog[]) => void,
   handleSetAuthorization: (value: boolean) => void,
-  handleSetIsLoading: (isLoading: boolean) => void,
 ) => {
   const url = `${api}dogs`;
   try {
@@ -18,7 +18,5 @@ export const getDogObjectsFromIds = async (
     if (axios.isAxiosError(error) && error.status === 401) {
       handleSetAuthorization(false);
     }
-  } finally {
-    handleSetIsLoading(false);
   }
 };

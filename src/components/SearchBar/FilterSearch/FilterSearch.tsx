@@ -16,13 +16,14 @@ export interface FilterSearchProps {
   setFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-//TODO: Add toast notif for filter deletion?
 const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
   const [query, setQuery] = useState<string>("");
   const [availableBreeds, setAvailableBreeds] = useState<string[]>([]);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
   const [showErrorToast, setShowErrorToast] = useState<boolean>(false);
-  const [lastSuggestion, setLastSuggestion] = useState<string>("");
+  const [showRemovedToast, setShowRemovedToast] = useState<boolean>(false);
+  const [recentlyApplied, setRecentlyApplied] = useState<string>("");
+  const [recentlyRemoved, setRecentlyRemoved] = useState<string>("");
 
   const mostRecentRef = useRef<HTMLDivElement | null>(null);
 
@@ -43,12 +44,32 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
       } else {
         const indexToRemove = prev.indexOf(breed);
         const _prev = prev.filter((_, i) => i !== indexToRemove);
-        // if (_prev.length == 0) {
-        //   clearSearchFilters();
-        // }
+        setRecentlyRemoved(breed);
+        setShowRemovedToast(true);
         return _prev;
       }
     });
+  };
+
+  const clearSearchFilters = () => {
+    setFilters([]);
+  };
+
+  const handleSetQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    if (filters.includes(suggestion)) {
+      setRecentlyApplied(suggestion);
+      setShowErrorToast(true);
+      return;
+    }
+
+    setRecentlyApplied(suggestion);
+    setShowSuccessToast(true);
+    setQuery("");
+    handleAddFilter(suggestion);
   };
 
   useEffect(() => {
@@ -63,10 +84,6 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
         console.error("breeds error", error);
       });
   }, []);
-
-  const handleSetQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
 
   const filteredSuggestions = useMemo(() => {
     return availableBreeds.filter((breed) =>
@@ -86,23 +103,6 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
     </>
   );
 
-  const handleSelectSuggestion = (suggestion: string) => {
-    if (filters.includes(suggestion)) {
-      setLastSuggestion(suggestion);
-      setShowErrorToast(true);
-      return;
-    }
-
-    setLastSuggestion(suggestion);
-    setShowSuccessToast(true);
-    setQuery("");
-    handleAddFilter(suggestion);
-  };
-
-  const clearSearchFilters = () => {
-    setFilters([]);
-  };
-
   useEffect(() => {
     mostRecentRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [filters]);
@@ -113,20 +113,26 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
         <Toast
           onClose={() => setShowSuccessToast(false)}
           show={showSuccessToast}
-          delay={4000}
+          delay={2000}
           autohide
         >
-          <Toast.Body>Filter: {lastSuggestion} added.</Toast.Body>
+          <Toast.Body>Filter: {recentlyApplied} applied</Toast.Body>
         </Toast>
         <Toast
           onClose={() => setShowErrorToast(false)}
           show={showErrorToast}
-          delay={4000}
+          delay={2000}
           autohide
         >
-          <Toast.Body>
-            Error adding filter: {lastSuggestion}. Filter already added
-          </Toast.Body>
+          <Toast.Body>Filter already applied: {recentlyApplied}</Toast.Body>
+        </Toast>
+        <Toast
+          onClose={() => setShowRemovedToast(false)}
+          show={showRemovedToast}
+          delay={2000}
+          autohide
+        >
+          <Toast.Body>Filter: {recentlyRemoved} removed</Toast.Body>
         </Toast>
       </ToastContainer>
       {query != "" ? (
