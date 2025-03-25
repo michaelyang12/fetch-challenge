@@ -5,7 +5,7 @@ import PathConstants from "./pathConstants";
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const LoginForm = React.lazy(() => import("../pages/Auth/LoginForm"));
 const Favorites = React.lazy(() => import("../pages/Favorites/Favorites"));
-const Match = React.lazy(() => import("../pages/Match/Match"));
+const ViewMatch = React.lazy(() => import("../pages/ViewMatch/ViewMatch"));
 
 const routes: RouteObject[] = [
   {
@@ -22,7 +22,7 @@ const routes: RouteObject[] = [
   },
   {
     path: PathConstants.MATCH,
-    element: <Match />,
+    element: <ViewMatch />,
   },
 ];
 

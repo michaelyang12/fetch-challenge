@@ -56,7 +56,7 @@ const LoginForm: React.FC = () => {
         <h2 className={styles.loginLabel}>
           <Form.Label htmlFor="inputPassword5">Login</Form.Label>
         </h2>
-        <form className={styles.loginForm}>
+        <div className={styles.loginForm}>
           <Form.Text id="nameHelpBlock" muted>
             Name
           </Form.Text>
@@ -83,7 +83,7 @@ const LoginForm: React.FC = () => {
           <Button variant="light" type="submit" onClick={submitCredentials}>
             Login
           </Button>
-        </form>
+        </div>
       </section>
     </main>
   );

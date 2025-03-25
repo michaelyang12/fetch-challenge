@@ -9,10 +9,16 @@ import FavoritesContext from "../../contexts/FavoritesContext";
 interface DogBoxProps {
   dogData: Dog;
   favorited: boolean;
+  match?: boolean;
+  imgHeight?: number;
 }
-const DogBox: React.FC<DogBoxProps> = ({ dogData, favorited }) => {
+const DogBox: React.FC<DogBoxProps> = ({
+  dogData,
+  favorited,
+  match = false,
+  imgHeight = 350,
+}) => {
   const { addFavorite, removeFavorite } = useContext(FavoritesContext);
-
   const [isHovered, setIsHovered] = useState(false);
 
   const handleSetFavorited = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +33,7 @@ const DogBox: React.FC<DogBoxProps> = ({ dogData, favorited }) => {
     <div className={styles.galleryItem} id={dogData.id}>
       <figure className={styles.image}>
         <img
-          height={350}
+          height={imgHeight}
           key={dogData.id}
           src={dogData.img}
           alt={dogData.name || "Dog"}
@@ -47,22 +53,27 @@ const DogBox: React.FC<DogBoxProps> = ({ dogData, favorited }) => {
           </div>
           <div className={styles.zipcode}>Zip: {dogData.zip_code}</div>
         </div>
-        <div className={styles.favorite}>
-          <ToggleButton
-            className="mb-2"
-            id={`toggle-fav-${dogData.id}`}
-            type="checkbox"
-            variant={"outline-danger"}
-            checked={favorited}
-            value={dogData.id}
-            onChange={handleSetFavorited}
-            size="sm"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <Heart fill={isHovered ? "currentColor" : "none"} strokeWidth={2} />
-          </ToggleButton>
-        </div>
+        {!match ? (
+          <div className={styles.favorite}>
+            <ToggleButton
+              className="mb-2"
+              id={`toggle-fav-${dogData.id}`}
+              type="checkbox"
+              variant={"outline-danger"}
+              checked={favorited}
+              value={dogData.id}
+              onChange={handleSetFavorited}
+              size="sm"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <Heart
+                fill={isHovered ? "currentColor" : "none"}
+                strokeWidth={2}
+              />
+            </ToggleButton>
+          </div>
+        ) : null}
       </section>
     </div>
   );
