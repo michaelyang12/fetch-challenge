@@ -6,14 +6,12 @@ import FilterSearch, { FilterSearchProps } from "./FilterSearch/FilterSearch";
 import { useState } from "react";
 
 interface SearchBarProps extends SortProps, PaginatorProps, FilterSearchProps {
-  searchForDogs: (breeds: string[]) => void;
   // filters: string[];
   // setFilters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 //TODO: Add search with dropdown (i.e. typing "gold" should list out all breed names corresponding to that)
 const SearchBar: React.FC<SearchBarProps> = ({
-  searchForDogs,
   filters,
   setFilters,
   sortAscending,

@@ -9,6 +9,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Dog } from "../../models";
 import { JSX } from "react/jsx-dev-runtime";
 import { Button, Spinner } from "react-bootstrap";
+import { getDogObjectsFromIds } from "../../functions";
 
 export type SortOptions = "breed" | "age" | "name";
 
@@ -19,31 +20,28 @@ const Favorites: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [dogData, setDogData] = useState<Dog[]>([]);
 
-  const loadDogDataFromFavorites = useCallback(() => {
+  const handleClearFavorites = () => {
+    clearFavorites();
+  };
+
+  const getFavoriteDogs = async () => {
     const loadingTimer = setTimeout(() => {
       setLoading(true);
     }, 500);
 
-    if (favorites) {
-      const url = `${api}dogs`;
-      axios
-        .post(url, favorites, requestConfig)
-        .then((response: AxiosResponse) => {
-          console.log("dogs", response.data);
-          setDogData(response.data);
-        })
-        .catch((error: AxiosError) => {
-          console.error("dogs error", error);
-          if (error.status === 401) {
-            handleSetAuthorization(false);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-          clearTimeout(loadingTimer);
-        });
+    try {
+      await getDogObjectsFromIds(
+        favorites,
+        setDogData,
+        handleSetAuthorization,
+        setLoading,
+      );
+    } catch (error: unknown) {
+      console.log("error getting favorites", error);
+    } finally {
+      clearTimeout(loadingTimer);
     }
-  }, [favorites]);
+  };
 
   //Render containers for each dog, memoized.
   const dogBoxes: JSX.Element[] = useMemo(() => {
@@ -56,13 +54,11 @@ const Favorites: React.FC = () => {
     ));
   }, [dogData, favorites]);
 
-  const handleClearFavorites = () => {
-    clearFavorites();
-  };
-
   useEffect(() => {
-    loadDogDataFromFavorites();
-  }, [loadDogDataFromFavorites]);
+    if (favorites.length > 0) {
+      getFavoriteDogs();
+    }
+  }, [favorites]);
 
   return (
     <main className={pageStyles.container}>

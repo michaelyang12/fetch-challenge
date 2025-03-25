@@ -7,6 +7,8 @@ import { Dog, Match } from "../../models";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { api, requestConfig } from "../../constants";
 import DogBox from "../../components/DogBox/DogBox";
+import { getDogObjectsFromIds } from "../../functions";
+import { Spinner } from "react-bootstrap";
 
 export type SortOptions = "breed" | "age" | "name";
 
@@ -15,63 +17,43 @@ const ViewMatch: React.FC = () => {
   const { favorites } = useContext(FavoritesContext);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [matchObject, setMatchObject] = useState<Match | null>(null);
-  const [matchDog, setMatchDog] = useState<Dog | null>(null);
+  const [matchDog, setMatchDog] = useState<Dog[] | null>(null);
 
-  const getMatchObject = useCallback(() => {
+  const getMatchDog = async () => {
     const loadingTimer = setTimeout(() => {
       setLoading(true);
     }, 500);
 
+    try {
+      const response = await axios.post(
+        `${api}dogs/match`,
+        favorites,
+        requestConfig,
+      );
+
+      const matchObject: Match = response.data;
+
+      await getDogObjectsFromIds(
+        [matchObject.match],
+        setMatchDog,
+        handleSetAuthorization,
+        setLoading,
+      );
+    } catch (error: unknown) {
+      console.error("dog match id error", error);
+      if (axios.isAxiosError(error) && error.status === 401) {
+        handleSetAuthorization(false);
+      }
+    } finally {
+      clearTimeout(loadingTimer);
+    }
+  };
+
+  useEffect(() => {
     if (favorites.length > 0) {
-      // Run search
-      axios
-        .post(`${api}dogs/match`, favorites, requestConfig)
-        .then((response: AxiosResponse) => {
-          console.log("match id", response.data);
-          setMatchObject(response.data);
-        })
-        .catch((error: AxiosError) => {
-          console.error("dog match id error", error);
-          if (error.status === 401) {
-            handleSetAuthorization(false);
-          }
-        })
-        .finally(() => {
-          clearTimeout(loadingTimer);
-        });
+      getMatchDog();
     }
   }, [favorites]);
-
-  const getMatchDog = useCallback(() => {
-    const url = `${api}dogs`;
-    if (matchObject && favorites.length > 0) {
-      axios
-        .post(url, [matchObject.match], requestConfig)
-        .then((response: AxiosResponse) => {
-          console.log("dogs", response.data);
-          setMatchDog(response.data[0]);
-        })
-        .catch((error: AxiosError) => {
-          console.error("dogs error", error);
-          if (error.status === 401) {
-            handleSetAuthorization(false);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-          // clearTimeout(timer);
-        });
-    }
-  }, [matchObject, favorites]);
-
-  useEffect(() => {
-    getMatchObject();
-  }, [getMatchObject]);
-
-  useEffect(() => {
-    getMatchDog();
-  }, [getMatchDog]);
 
   return (
     <main className={pageStyles.container}>
@@ -86,18 +68,24 @@ const ViewMatch: React.FC = () => {
           </h2>
         )}
       </header>
-      <div className={pageStyles.content}>
-        <div className={styles.matchContainer}>
-          {matchDog ? (
-            <DogBox
-              dogData={matchDog!}
-              favorited={true}
-              match={true}
-              imgHeight={450}
-            />
-          ) : null}
-        </div>
-      </div>
+      <section className={pageStyles.content}>
+        {!loading ? (
+          <div className={styles.matchContainer}>
+            {matchDog ? (
+              <DogBox
+                dogData={matchDog![0]}
+                favorited={true}
+                match={true}
+                imgHeight={450}
+              />
+            ) : null}
+          </div>
+        ) : (
+          <div className={pageStyles.loaderContainer}>
+            <Spinner animation="border" variant="secondary" />
+          </div>
+        )}
+      </section>
     </main>
   );
 };
