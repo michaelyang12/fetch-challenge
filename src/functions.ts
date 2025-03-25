@@ -15,9 +15,12 @@ export const getDogObjectsFromIds = async (
     console.log("dog objects", response.data);
     handleSetDogData(response.data);
   } catch (error: unknown) {
-    console.error("dogs error", error.message);
     if (axios.isAxiosError(error) && error.status === 401) {
       handleSetAuthorization(false);
+    } else if (axios.isAxiosError(error)) {
+      console.error("error getting dog objects", error.message);
+    } else {
+      console.error("error getting dog objects", error);
     }
   }
 };

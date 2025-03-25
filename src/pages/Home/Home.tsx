@@ -71,8 +71,10 @@ const Home: React.FC = () => {
       if (axios.isAxiosError(error) && error.status === 401) {
         console.error("Unauthorized", error.message);
         handleSetAuthorization(false);
-      } else {
+      } else if (axios.isAxiosError(error)) {
         console.error("error searching for dogs", error.message);
+      } else {
+        console.error("error searching for dogs", error);
       }
     } finally {
       setLoading(false);

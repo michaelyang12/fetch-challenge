@@ -9,6 +9,7 @@ import { Dog } from "../../models";
 import pageStyles from "../pages.module.scss";
 import styles from "./Favorites.module.scss";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import axios from "axios";
 
 export type SortOptions = "breed" | "age" | "name";
 
@@ -28,7 +29,14 @@ const Favorites: React.FC = () => {
     try {
       await getDogObjectsFromIds(favorites, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
-      console.log("error getting favorites", error.message);
+      if (axios.isAxiosError(error) && error.status == 401) {
+        console.error("Not authorized", error.message);
+        handleSetAuthorization(false);
+      } else if (axios.isAxiosError(error)) {
+        console.error("error getting favorites", error.message);
+      } else {
+        console.error("error getting favorites", error);
+      }
     } finally {
       setLoading(false);
     }
