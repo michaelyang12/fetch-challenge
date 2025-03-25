@@ -21,7 +21,11 @@ const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
 
   const OptionSelect: React.FC = () => (
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic" size="sm">
+      <Dropdown.Toggle
+        variant="outline-secondary"
+        id="dropdown-basic"
+        size="sm"
+      >
         Sort by: {option}
       </Dropdown.Toggle>
       <Dropdown.Menu>

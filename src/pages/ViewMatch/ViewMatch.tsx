@@ -20,7 +20,6 @@ const ViewMatch: React.FC = () => {
   const [matchDog, setMatchDog] = useState<Dog[] | null>(null);
 
   const getMatchDog = async () => {
-    setLoading(true);
     try {
       const response = await axios.post(
         `${api}dogs/match`,
@@ -48,6 +47,14 @@ const ViewMatch: React.FC = () => {
       getMatchDog();
     }
   }, [favorites]);
+
+  useEffect(() => {
+    if (matchDog != null) {
+      console.log("match dog", matchDog![0].id);
+    } else {
+      console.warn("match dog is null");
+    }
+  }, [matchDog]);
 
   return (
     <main className={pageStyles.container}>

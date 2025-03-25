@@ -9,6 +9,7 @@ export const getDogObjectsFromIds = async (
   handleSetAuthorization: (value: boolean) => void,
 ) => {
   const url = `${api}dogs`;
+
   try {
     const response: AxiosResponse = await axios.post(url, ids, requestConfig);
     console.log("dog objects", response.data);

@@ -164,13 +164,16 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
           })}
           <div ref={mostRecentRef} />
         </section>
-        <Button
-          disabled={!filters || filters.length == 0}
-          size="sm"
-          onClick={() => clearSearchFilters()}
-        >
-          Clear
-        </Button>
+        <section className={styles.clearBox}>
+          <Button
+            disabled={!filters || filters.length == 0}
+            size="sm"
+            onClick={() => clearSearchFilters()}
+            variant="warning"
+          >
+            Clear Filters
+          </Button>
+        </section>
       </div>
     </>
   );

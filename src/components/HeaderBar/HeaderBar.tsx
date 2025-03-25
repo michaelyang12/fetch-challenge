@@ -2,13 +2,23 @@ import styles from "./HeaderBar.module.scss";
 import { api, requestConfig } from "../../constants";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import { useContext } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import AuthContext from "../../contexts/AuthContext";
-import { Link } from "react-router-dom";
-import PathConstants from "../../routes/pathConstants";
+import { Link, useLocation } from "react-router-dom";
+import PathConstants, { PathConstantType } from "../../routes/pathConstants";
+import { JSX } from "react/jsx-dev-runtime";
 
 const HeaderBar: React.FC = () => {
+  const location = useLocation();
   const { handleSetAuthorization } = useContext(AuthContext);
+  const [selectedPage, setSelectedPage] = useState<PathConstantType>(
+    PathConstants.HOME,
+  );
+
+  useEffect(() => {
+    setSelectedPage(location.pathname as PathConstantType);
+    console.log(location.pathname);
+  }, [location.pathname]);
 
   const handleSetLogout = () => {
     const url = `${api}auth/logout`;
@@ -24,23 +34,32 @@ const HeaderBar: React.FC = () => {
   };
 
   const Logout: React.FC = () => (
-    <Button size="sm" onClick={handleSetLogout}>
+    <Button size="sm" onClick={handleSetLogout} variant="outline-secondary">
       Logout
     </Button>
   );
 
-  const NavElements: React.FC = () => (
-    <>
-      <div className={styles.navElement}>
-        <Link to={PathConstants.HOME}>Home</Link>
-      </div>
-      <div className={styles.navElement}>
-        <Link to={PathConstants.FAVORITES}>Favorites</Link>
-      </div>
-      <div className={styles.navElement}>
-        <Link to={PathConstants.MATCH}>Match</Link>
-      </div>
-    </>
+  const NavElements: JSX.Element = useMemo(
+    () => (
+      <>
+        <div
+          className={`${styles.navElement} ${selectedPage === PathConstants.HOME ? styles.selected : ""}`}
+        >
+          <Link to={PathConstants.HOME}>Home</Link>
+        </div>
+        <div
+          className={`${styles.navElement} ${selectedPage === PathConstants.FAVORITES ? styles.selected : ""}`}
+        >
+          <Link to={PathConstants.FAVORITES}>Favorites</Link>
+        </div>
+        <div
+          className={`${styles.navElement} ${selectedPage === PathConstants.MATCH ? styles.selected : ""}`}
+        >
+          <Link to={PathConstants.MATCH}>Match</Link>
+        </div>
+      </>
+    ),
+    [selectedPage],
   );
 
   return (
@@ -49,9 +68,7 @@ const HeaderBar: React.FC = () => {
         <h2 className={`${styles.section} ${styles.title}`}>Dogs</h2>
       </section>
       <nav className={styles.center}>
-        <div className={`${styles.section} ${styles.nav}`}>
-          <NavElements />
-        </div>
+        <div className={`${styles.section} ${styles.nav}`}>{NavElements}</div>
       </nav>
       <section className={styles.right}>
         <div className={`${styles.section} ${styles.logout}`}>

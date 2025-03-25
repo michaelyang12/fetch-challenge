@@ -14,11 +14,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        /* border: 1px solid yellow; */
+
         .info {
             padding: 10px;
-            /* border: 1px solid blue; */
-            /* margin-bottom: 15px; */
 
             .name {
                 font-size: 16pt;
@@ -37,8 +35,8 @@
         }
 
         .favorite {
-            padding: 35px;
-            /* border: 1px solid red; */
+            padding: 15px;
+            margin-top: 50px;
         }
     }
 }

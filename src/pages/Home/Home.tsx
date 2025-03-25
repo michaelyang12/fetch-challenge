@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { JSX } from "react/jsx-dev-runtime";
 import DogBox from "../../components/DogBox/DogBox";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -29,23 +29,28 @@ const Home: React.FC = () => {
   const [filters, setFilters] = useState<string[]>([]);
   const [totalDogCount, setTotalDogCount] = useState<number>(0);
 
-  const handleSetCurrentPage = (page: number) => {
-    if (page > 0 && page <= totalDogCount / perPageResults) {
-      setCurrentPage(page);
-    } else {
-      console.warn("Page number must be a positive value");
-    }
-  };
+  const handleSetCurrentPage = useCallback(
+    (page: number) => {
+      if (page > 0 && page <= totalDogCount / perPageResults) {
+        setCurrentPage(page);
+      } else {
+        console.warn("Page number must be a positive value");
+      }
+    },
+    [totalDogCount],
+  );
 
-  const handleSetSort = (value: boolean, option: SortOptions) => {
-    console.log(`Filtering by ${option}:`, sortAscending, option);
-    setSortAscending(value);
-    setSortOption(option);
-  };
+  const handleSetSort = useCallback(
+    (value: boolean, option: SortOptions) => {
+      console.log(`Filtering by ${option}:`, sortAscending, option);
+      setSortAscending(value);
+      setSortOption(option);
+    },
+    [sortAscending],
+  );
 
   const getDogObjects = async () => {
     setLoading(true);
-
     // Adjust params based on states
     const params = {
       params: {
@@ -66,9 +71,11 @@ const Home: React.FC = () => {
       setTotalDogCount(idsResponse.data.total);
       await getDogObjectsFromIds(dogIds, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
-      console.error("error searching for dogs", error);
       if (axios.isAxiosError(error) && error.status === 401) {
+        console.error("Unauthorized", error);
         handleSetAuthorization(false);
+      } else {
+        console.error("error searching for dogs", error);
       }
     } finally {
       setLoading(false);

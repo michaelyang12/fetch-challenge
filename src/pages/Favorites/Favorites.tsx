@@ -69,7 +69,11 @@ const Favorites: React.FC = () => {
         )}
       </section>
       <footer className={styles.footerBarContainer}>
-        <Button onClick={handleClearFavorites} variant="danger">
+        <Button
+          onClick={handleClearFavorites}
+          variant="danger"
+          disabled={favorites.length == 0}
+        >
           Clear favorites
         </Button>
       </footer>

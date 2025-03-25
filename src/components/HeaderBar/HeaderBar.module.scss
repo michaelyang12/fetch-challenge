@@ -43,6 +43,12 @@
         justify-content: center;
         align-items: center;
         gap: 35px;
+
+        .navElement {
+            &.selected a {
+                color: purple;
+            }
+        }
     }
 
     &.logout {
