@@ -2,7 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./FilterSearch.module.scss";
 import { api, requestConfig } from "../../../constants";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { CloseButton, Form, Toast, ToastContainer } from "react-bootstrap";
+import {
+  Button,
+  CloseButton,
+  Form,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import { JSX } from "react/jsx-dev-runtime";
 
 export interface FilterSearchProps {
@@ -93,9 +99,13 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
     handleAddFilter(suggestion);
   };
 
+  const clearSearchFilters = () => {
+    setFilters([]);
+  };
+
   useEffect(() => {
     mostRecentRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [filters]); // Runs whenever `messages` updates
+  }, [filters]);
 
   return (
     <>
@@ -134,8 +144,8 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
         </div>
       ) : null}
       <div className={styles.searchContainer}>
-        <div className={styles.searchBox}>{SearchBox}</div>
-        <div className={styles.pillBox}>
+        <section className={styles.searchBox}>{SearchBox}</section>
+        <section className={styles.pillBox}>
           {filters.map((breed: string) => {
             return (
               <div className={styles.pill}>
@@ -147,7 +157,14 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
             );
           })}
           <div ref={mostRecentRef} />
-        </div>
+        </section>
+        <Button
+          disabled={!filters || filters.length == 0}
+          size="sm"
+          onClick={() => clearSearchFilters()}
+        >
+          Clear
+        </Button>
       </div>
     </>
   );

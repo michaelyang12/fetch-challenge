@@ -25,24 +25,24 @@ const DogBox: React.FC<DogBoxProps> = ({ dogData, favorited }) => {
 
   return (
     <div className={styles.galleryItem} id={dogData.id}>
-      <div className={styles.image}>
+      <figure className={styles.image}>
         <img
-          height={250}
+          height={350}
           key={dogData.id}
           src={dogData.img}
           alt={dogData.name || "Dog"}
         />
-      </div>
-      <div className={styles.infoContainer}>
+      </figure>
+      <section className={styles.infoContainer}>
         <div className={styles.info}>
-          <div className={styles.name}>
+          <h3 className={styles.name}>
             <b>{dogData.name}</b>
-          </div>
+          </h3>
           <div className={styles.breed}>
             {dogData.breed}
             <span className={styles.age}>
               {" "}
-              - {dogData.age} {dogData.age != 1 ? "years old" : "year old"}
+              - {dogData.age} {dogData.age !== 1 ? "years old" : "year old"}
             </span>
           </div>
           <div className={styles.zipcode}>Zip: {dogData.zip_code}</div>
@@ -63,7 +63,7 @@ const DogBox: React.FC<DogBoxProps> = ({ dogData, favorited }) => {
             <Heart fill={isHovered ? "currentColor" : "none"} strokeWidth={2} />
           </ToggleButton>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

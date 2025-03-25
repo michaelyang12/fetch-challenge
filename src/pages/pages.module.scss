@@ -1,0 +1,27 @@
+.container {
+    width: 100vw;
+}
+
+.content {
+    width: 100vw;
+    height: 85vh;
+    overflow: auto;
+}
+
+.dogGallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 90%;
+    margin: 0 auto;
+    height: auto;
+}
+
+.loaderContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

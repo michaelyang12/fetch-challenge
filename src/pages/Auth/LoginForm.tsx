@@ -51,13 +51,12 @@ const LoginForm: React.FC = () => {
   }, [name, email]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.loginLabel}>
-          {" "}
+    <main className={styles.container}>
+      <section className={styles.content}>
+        <h2 className={styles.loginLabel}>
           <Form.Label htmlFor="inputPassword5">Login</Form.Label>
-        </div>
-        <div className={styles.loginForm}>
+        </h2>
+        <form className={styles.loginForm}>
           <Form.Text id="nameHelpBlock" muted>
             Name
           </Form.Text>
@@ -78,19 +77,15 @@ const LoginForm: React.FC = () => {
             onChange={handleSetEmailChange}
             aria-describedby="emailHelpBlock"
           />
-          {displayError ? (
-            <div className={styles.error}>
-              Must provide valid name/email combo
-            </div>
-          ) : null}
-        </div>
-        <div className={styles.loginButton}>
-          <Button variant="light" onClick={submitCredentials}>
+          {displayError && (
+            <p className={styles.error}>Must provide valid name/email combo</p>
+          )}
+          <Button variant="light" type="submit" onClick={submitCredentials}>
             Login
           </Button>
-        </div>
-      </div>
-    </div>
+        </form>
+      </section>
+    </main>
   );
 };
 

@@ -1,0 +1,30 @@
+@import "../../variables";
+
+.favoritesContent {
+    height: 86vh;
+}
+
+.noFavorites {
+    .heading {
+        font-size: 15pt;
+    }
+    .information {
+        font-size: 13pt;
+        color: gray;
+    }
+    text-align: center;
+    padding: 50px;
+    display: block;
+}
+
+.footerBarContainer {
+    bottom: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: $beige-brown;
+    width: 100%;
+    height: auto;
+}

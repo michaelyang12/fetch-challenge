@@ -30,3 +30,21 @@
         flex: 1;
     }
 }
+
+.section {
+    padding: 10px;
+
+    &.title {
+        font-size: 14pt;
+    }
+
+    &.nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 35px;
+    }
+
+    &.logout {
+    }
+}

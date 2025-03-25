@@ -1,15 +1,16 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Dog } from "../models";
+import { Dog } from "../../models";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { api, perPageResults, requestConfig } from "../constants";
+import { api, requestConfig, perPageResults } from "../../constants";
+import pageStyles from "../pages.module.scss";
 import styles from "./Home.module.scss";
 import { JSX } from "react/jsx-dev-runtime";
-import DogBox from "../components/DogBox/DogBox";
-import SearchBar from "../components/SearchBar/SearchBar";
-import AuthContext from "../contexts/AuthContext";
+import DogBox from "../../components/DogBox/DogBox";
+import SearchBar from "../../components/SearchBar/SearchBar";
+import AuthContext from "../../contexts/AuthContext";
 import { Spinner } from "react-bootstrap";
 import { Prev } from "react-bootstrap/esm/PageItem";
-import FavoritesContext from "../contexts/FavoritesContext";
+import FavoritesContext from "../../contexts/FavoritesContext";
 
 //TODO: Add favorites.
 //TODO: Add _/total results at bottom of page.
@@ -152,17 +153,17 @@ const Home: React.FC = () => {
   }, [dogData, favorites]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
+    <main className={pageStyles.container}>
+      <section className={pageStyles.content}>
         {!loading ? (
-          <div className={styles.dogGallery}>{dogBoxes}</div>
+          <section className={pageStyles.dogGallery}>{dogBoxes}</section>
         ) : (
-          <div className={styles.loaderContainer}>
-            <Spinner animation="border" variant="secondary" />.
+          <div className={pageStyles.loaderContainer}>
+            <Spinner animation="border" variant="secondary" />
           </div>
         )}
-      </div>
-      <div className={styles.searchBarContainer}>
+      </section>
+      <footer className={styles.searchBarContainer}>
         <SearchBar
           searchForDogs={searchForDogs}
           filters={filters}
@@ -173,8 +174,8 @@ const Home: React.FC = () => {
           currentPage={currentPage}
           handleSetCurrentPage={handleSetCurrentPage}
         />
-      </div>
-    </div>
+      </footer>
+    </main>
   );
 };
 

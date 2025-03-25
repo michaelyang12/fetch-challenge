@@ -1,8 +1,9 @@
 import Filter, { SortProps } from "./Sort/Sort";
 import Paginator, { PaginatorProps } from "./Paginator/Paginator";
 import styles from "./SearchBar.module.scss";
-import { Button } from "react-bootstrap";
+import { Button, ToggleButton } from "react-bootstrap";
 import FilterSearch, { FilterSearchProps } from "./FilterSearch/FilterSearch";
+import { useState } from "react";
 
 interface SearchBarProps extends SortProps, PaginatorProps, FilterSearchProps {
   searchForDogs: (breeds: string[]) => void;
@@ -21,41 +22,37 @@ const SearchBar: React.FC<SearchBarProps> = ({
   currentPage,
   handleSetCurrentPage,
 }) => {
-  // const [filters, setFilters] = useState<string[]>([]);
-  const clearSearchFilters = () => {
-    setFilters([]);
-  };
-
   return (
     <div className={styles.container}>
-      <div className={styles.filterContainer}>
+      <section className={styles.filterContainer}>
         <Filter sortAscending={sortAscending} handleSetSort={handleSetSort} />
-      </div>
-      <div className={styles.searchContainer}>
+      </section>
+      <section className={styles.searchContainer}>
         <FilterSearch filters={filters} setFilters={setFilters} />
-        <div className={styles.buttonContainer}>
-          <Button
-            disabled={!filters || filters.length == 0}
+        {/* <div className={styles.buttonContainer}>
+          <ToggleButton
+            className="mb-2"
+            id={`toggle-show-only-favorites`}
+            type="checkbox"
+            variant={isHovered ? "danger" : "outline-danger"}
+            checked={showOnlyFavorites}
+            value={1}
+            onChange={handleToggleOnlyFavorites}
             size="sm"
-            onClick={() => clearSearchFilters()}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            Clear
-          </Button>
-          {/* <Button
-            disabled={!filters || filters.length == 0}
-            onClick={() => searchForDogs(filters)}
-          >
-            Search
-          </Button> */}
-        </div>
-      </div>
-      <div className={styles.pageContainer}>
+            Only favorites
+          </ToggleButton>
+        </div> */}
+      </section>
+      <section className={styles.pageContainer}>
         <Paginator
           totalDogCount={totalDogCount}
           currentPage={currentPage}
           handleSetCurrentPage={handleSetCurrentPage}
         />
-      </div>
+      </section>
     </div>
   );
 };

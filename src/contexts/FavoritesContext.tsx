@@ -33,9 +33,13 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
     setFavorites((prev) => prev.filter((id) => id !== dogId));
   };
 
+  const clearFavorites = () => {
+    setFavorites([]);
+  };
+
   return (
     <FavoritesContext.Provider
-      value={{ favorites, addFavorite, removeFavorite }}
+      value={{ favorites, addFavorite, removeFavorite, clearFavorites }}
     >
       {children}
     </FavoritesContext.Provider>

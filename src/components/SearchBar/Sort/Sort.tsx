@@ -1,9 +1,10 @@
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import styles from "./Sort.module.scss";
-import { SortOptions } from "../../../pages/Home";
+import { SortOptions } from "../../../pages/Home/Home";
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 export interface SortProps {
   // option: SortOptions;
@@ -43,28 +44,28 @@ const Sort: React.FC<SortProps> = ({ sortAscending, handleSetSort }) => {
   return (
     <div className={styles.container}>
       {/* <span className={styles.label}>Filter</span> */}
-      <div className={styles.optionSelectContainer}>
+      <section className={styles.optionSelectContainer}>
         <OptionSelect />
-      </div>
+      </section>
 
-      <div className={styles.ascendingContainer}>
+      <section className={styles.ascendingContainer}>
         <ButtonGroup aria-label="Basic example">
           <Button
             size="sm"
             variant={!sortAscending ? "outline-secondary" : "secondary"}
             onClick={() => handleSetSort(true, option)}
           >
-            Ascending
+            <ArrowUp />
           </Button>
           <Button
             size="sm"
             variant={sortAscending ? "outline-secondary" : "secondary"}
             onClick={() => handleSetSort(false, option)}
           >
-            Descending
+            <ArrowDown />
           </Button>
         </ButtonGroup>
-      </div>
+      </section>
     </div>
   );
 };

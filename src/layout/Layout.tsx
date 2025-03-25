@@ -36,14 +36,12 @@ function Layout() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <header className={styles.headerBarContainer}>
         <HeaderBar />
-      </div>
-      <div className={styles.mainContent}>
-        <main>
-          <Outlet />
-        </main>
-      </div>
+      </header>
+      <main className={styles.mainContent}>
+        <Outlet />
+      </main>
     </div>
   );
 }
