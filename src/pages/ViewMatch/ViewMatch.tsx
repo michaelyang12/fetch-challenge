@@ -33,7 +33,7 @@ const ViewMatch: React.FC = () => {
         handleSetAuthorization,
       );
     } catch (error: unknown) {
-      console.error("dog match id error", error);
+      console.error("dog match id error", error.message);
       if (axios.isAxiosError(error) && error.status === 401) {
         handleSetAuthorization(false);
       }

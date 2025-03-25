@@ -12,9 +12,6 @@ import pageStyles from "../pages.module.scss";
 import styles from "./Home.module.scss";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
-//TODO: Add _/total results at bottom of page.
-//TODO: Fix bug where page number can become decimal if skip to last page
-//TODO: Fix page system (doesn't show last page which may be < perPageResult dogs)
 export type SortOptions = "breed" | "age" | "name";
 
 const Home: React.FC = () => {
@@ -72,10 +69,10 @@ const Home: React.FC = () => {
       await getDogObjectsFromIds(dogIds, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.status === 401) {
-        console.error("Unauthorized", error);
+        console.error("Unauthorized", error.message);
         handleSetAuthorization(false);
       } else {
-        console.error("error searching for dogs", error);
+        console.error("error searching for dogs", error.message);
       }
     } finally {
       setLoading(false);

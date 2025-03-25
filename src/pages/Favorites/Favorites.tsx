@@ -28,7 +28,7 @@ const Favorites: React.FC = () => {
     try {
       await getDogObjectsFromIds(favorites, setDogData, handleSetAuthorization);
     } catch (error: unknown) {
-      console.log("error getting favorites", error);
+      console.log("error getting favorites", error.message);
     } finally {
       setLoading(false);
     }

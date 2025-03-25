@@ -5,7 +5,6 @@ import routes from "./routes";
 import { Suspense } from "react";
 import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
 
-//TODO: Fix logout
 function App() {
   const router = createBrowserRouter([
     {

@@ -4,17 +4,18 @@ import HeaderBar from "../components/HeaderBar/HeaderBar";
 import axios from "axios";
 import { api, requestConfig } from "../constants";
 import styles from "./Layout.module.scss";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PathConstants from "../routes/pathConstants";
 
-//TODO: Make loading page component and use in all pages
 function Layout() {
+  const location = useLocation();
   const { authorized, handleSetAuthorization } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.warn("location changed");
     axios
       .get(`${api}dogs/breeds`, requestConfig)
       .then((response) => {
@@ -29,7 +30,7 @@ function Layout() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!loading) {
@@ -39,7 +40,7 @@ function Layout() {
         navigate(PathConstants.AUTH);
       }
     }
-  }, [authorized, loading]);
+  }, [authorized, loading, location.pathname]);
 
   return (
     <div className={styles.container}>

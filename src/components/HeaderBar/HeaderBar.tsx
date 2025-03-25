@@ -10,7 +10,7 @@ import { JSX } from "react/jsx-dev-runtime";
 
 const HeaderBar: React.FC = () => {
   const location = useLocation();
-  const { handleSetAuthorization } = useContext(AuthContext);
+  const { authorized, handleSetAuthorization } = useContext(AuthContext);
   const [selectedPage, setSelectedPage] = useState<PathConstantType>(
     PathConstants.HOME,
   );
@@ -23,13 +23,13 @@ const HeaderBar: React.FC = () => {
   const handleSetLogout = () => {
     const url = `${api}auth/logout`;
     axios
-      .post(url, requestConfig)
+      .post(url, {}, requestConfig)
       .then((response) => {
         console.log("logout", response);
         handleSetAuthorization(false);
       })
       .catch((error) => {
-        console.error("error logging out", error);
+        console.error("error logging out", error.message);
       });
   };
 
@@ -68,11 +68,13 @@ const HeaderBar: React.FC = () => {
         <h2 className={`${styles.section} ${styles.title}`}>Dogs</h2>
       </section>
       <nav className={styles.center}>
-        <div className={`${styles.section} ${styles.nav}`}>{NavElements}</div>
+        <div className={`${styles.section} ${styles.nav}`}>
+          {authorized ? NavElements : null}
+        </div>
       </nav>
       <section className={styles.right}>
         <div className={`${styles.section} ${styles.logout}`}>
-          <Logout />
+          {authorized ? <Logout /> : null}
         </div>
       </section>
     </div>

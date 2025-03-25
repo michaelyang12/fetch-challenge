@@ -5,7 +5,6 @@ import FilterSearch, { FilterSearchProps } from "./FilterSearch/FilterSearch";
 
 interface SearchBarProps extends SortProps, PaginatorProps, FilterSearchProps {}
 
-//TODO: Add search with dropdown (i.e. typing "gold" should list out all breed names corresponding to that)
 const SearchBar: React.FC<SearchBarProps> = ({
   filters,
   setFilters,

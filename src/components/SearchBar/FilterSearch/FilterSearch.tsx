@@ -81,7 +81,7 @@ const FilterSearch: React.FC<FilterSearchProps> = ({ filters, setFilters }) => {
         setAvailableBreeds(response.data);
       })
       .catch((error: AxiosError) => {
-        console.error("breeds error", error);
+        console.error("breeds error", error.message);
       });
   }, []);
 
